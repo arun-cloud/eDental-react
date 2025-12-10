@@ -22,6 +22,9 @@ export const ToothSurfaceWheel: React.FC<Props> = ({
     const outerR = size * 0.40;
     const anglePerSlice = (2 * Math.PI) / 4; // 4 outer slices
 
+
+
+
     const handleClick = (s: SurfaceName) => {
         onSurfaceClick && onSurfaceClick(s);
     };

@@ -41,17 +41,18 @@ export const OdontogramChart: React.FC = () => {
 
     const updateSurface = (toothId: number, surface: SurfaceName, indicatorId: string | null) => {
         setTeeth(prev =>
-            prev.map(t =>
-                t.toothId === toothId
-                    ? {
-                        ...t,
-                        surfaces: {
-                            ...t.surfaces,
-                            [surface]: { ...t.surfaces[surface], indicatorId },
-                        },
-                    }
-                    : t
-            )
+            prev.map(t => {
+
+                if (t.toothId !== toothId) return t;
+                const currentIndicator = t.surfaces[surface].indicatorId;
+                return {
+                    ...t,
+                    surfaces: {
+                        ...t.surfaces,
+                        [surface]: { ...t.surfaces[surface], indicatorId: currentIndicator === indicatorId ? null : indicatorId },
+                    },
+                };
+            })
         );
     };
 

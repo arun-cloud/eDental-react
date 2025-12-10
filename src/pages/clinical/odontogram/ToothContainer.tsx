@@ -1,8 +1,9 @@
 // src/odontogram/ToothContainer.tsx
 import React from 'react';
-import { SurfaceName, ToothState } from './types';
+import { SurfaceName, ToothState, ToothLayout } from './types';
 import { ToothSurfaceWheel } from './ToothSurfaceWheel';
-import { indicatorById } from './indicators';
+import { Indicator, indicatorById } from './indicators';
+
 
 type Props = {
     tooth: ToothState;
@@ -36,60 +37,164 @@ export const ToothContainer: React.FC<Props> = ({
     // Determine if tooth is upper or lower based on FDI numbering
     // Upper: 11-18, 21-28 (first digit is 1 or 2)
     // Lower: 31-38, 41-48 (first digit is 3 or 4)
-    const isUpperTooth = tooth.toothId >= 11 && tooth.toothId <= 28;
+
+
 
 
     // Position calculations
-    const toothLayouts = new Map<number, {
-        toothImageX: number;
-        toothImageY: number;
-        wheelX: number;
-        wheelY: number;
-        toothWidth: number;
-        toothHeight: number;
-    }>([
-        // Upper teeth (11-28)
-        [11, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [12, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [13, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [14, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [15, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [16, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [17, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [18, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [21, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [22, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [23, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [24, { toothImageX: 13, toothImageY: 6, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [25, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [26, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [27, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        [28, { toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
-        // Lower teeth (31-48)
-        [31, { toothImageX: 15, toothImageY: 40, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [32, { toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [33, { toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [34, { toothImageX: 15, toothImageY: 45, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [35, { toothImageX: 15, toothImageY: 40, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [36, { toothImageX: 18, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [37, { toothImageX: 19, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [38, { toothImageX: 20, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+    const toothLayouts = new Map<number, ToothLayout>([
+        // =========================
+        // UPPER ARCH (11–28)
+        // =========================
+        [11, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: 4, offsetY: 4 }] } }],
+        [12, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: 0, offsetY: 4 }] } }],
+        [13, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: 0, offsetY: 4 }] } }],
+        [14, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: -7, offsetY: 1 }] } }],
+        [15, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: -8, offsetY: 2 }] } }],
+        [16, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: 0, offsetY: 10 }] } }],
+        [17, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: 0, offsetY: 4 }] } }],
+        [18, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75, apex: { roots: [{ offsetX: 0, offsetY: 4 }] } }],
 
-        [41, { toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [42, { toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [43, { toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [44, { toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [45, { toothImageX: 15, toothImageY: 45, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [46, { toothImageX: 12, toothImageY: 43, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [47, { toothImageX: 12, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
-        [48, { toothImageX: 8, toothImageY: 37, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [21, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [22, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [23, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [24, { arch: 'upper', toothImageX: 13, toothImageY: 6, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [25, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [26, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [27, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+        [28, { arch: 'upper', toothImageX: 15, toothImageY: 0, wheelX: 25, wheelY: 54, toothWidth: 80, toothHeight: 75 }],
+
+        // =========================
+        // LOWER ARCH (31–48)
+        // =========================
+        [31, { arch: 'lower', toothImageX: 15, toothImageY: 40, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [32, { arch: 'lower', toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [33, { arch: 'lower', toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [34, { arch: 'lower', toothImageX: 15, toothImageY: 45, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [35, { arch: 'lower', toothImageX: 15, toothImageY: 40, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [36, { arch: 'lower', toothImageX: 18, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [37, { arch: 'lower', toothImageX: 19, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [38, { arch: 'lower', toothImageX: 20, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+
+        [41, { arch: 'lower', toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [42, { arch: 'lower', toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [43, { arch: 'lower', toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [44, { arch: 'lower', toothImageX: 15, toothImageY: 50, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [45, { arch: 'lower', toothImageX: 15, toothImageY: 45, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [46, { arch: 'lower', toothImageX: 12, toothImageY: 43, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [47, { arch: 'lower', toothImageX: 12, toothImageY: 38, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
+        [48, { arch: 'lower', toothImageX: 8, toothImageY: 37, wheelX: 25, wheelY: 0, toothWidth: 80, toothHeight: 75 }],
     ]);
 
-    const currentToothLayout = toothLayouts.get(tooth.toothId) || {
-        toothImageX: 0, toothImageY: 0, wheelX: 0, wheelY: 0, toothWidth: 80, toothHeight: 75
-    }; // Fallback for unknown toothId
+    const DEFAULT_TOOTH_LAYOUT: ToothLayout = {
+        arch: 'upper', // safe default, won't crash math
+        toothImageX: 0,
+        toothImageY: 0,
+        wheelX: 0,
+        wheelY: 0,
+        toothWidth: 80,
+        toothHeight: 75,
+    };
 
-    const { toothImageX, toothImageY, wheelX, wheelY, toothWidth, toothHeight } = currentToothLayout;
+
+
+    const currentToothLayout = toothLayouts.get(tooth.toothId) || DEFAULT_TOOTH_LAYOUT;
+    // Fallback for unknown toothId
+
+    if (!currentToothLayout) {
+        throw new Error(`ToothLayout not found for toothId ${tooth.toothId}`);
+    }
+
+    const { arch, toothImageX, toothImageY, wheelX, wheelY, toothWidth, toothHeight, crown, root, apex } = currentToothLayout;
+
+    const isUpperTooth = currentToothLayout.arch === 'upper';
+
+    // 1) Basic vertical limits of the tooth image
+    const toothTopY = toothImageY;                   // top edge of PNG
+    const toothBottomY = toothImageY + toothHeight;  // bottom edge of PNG
+
+    // 2) Horizontal center (tooth axis)
+    const centerX = toothImageX + toothWidth / 2;
+
+    // 3) Crown anchors
+    const crownTopRatio = crown?.topRatio ?? 0.0;
+    const crownCenterRatio = crown?.centerRatio ?? 0.25;
+
+    const crownTopY = toothTopY + toothHeight * crownTopRatio; // incisal / occlusal edge
+    const crownCenterY = toothTopY + toothHeight * crownCenterRatio;
+
+    // 4) Root region inside the tooth  (ratio-based)
+    const midRootRatio = root?.midRatio ?? 0.6;
+    const midRootY = toothTopY + toothHeight * midRootRatio;
+
+    // 5) Root apex (tip of root, slightly outside image)
+    const apexOffset = root?.apexOffset ?? 4;
+
+
+
+    const rootDirection = root?.direction ?? (arch === 'upper' ? 1 : -1);
+    const rootApexX = centerX;
+
+
+    const rootApexY = arch === 'upper' ? toothTopY : toothBottomY;
+
+
+
+
+
+
+    const renderToothIndicator = (ind: Indicator) => {
+
+        const apexRoots = currentToothLayout.apex?.roots ?? [{ offsetX: 0, offsetY: 0 }];
+        switch (ind.id) {
+            case 'periapical':
+
+
+                return apexRoots.map((p, idx) => (
+                    <circle
+                        key={`${ind.id}-${idx}`}
+                        cx={rootApexX + p.offsetX}
+                        cy={rootApexY + (p.offsetY ?? 0)}
+                        r={6}
+                        stroke={ind.color}
+                        fill="none"
+                        strokeWidth={2}
+                    />
+                ));
+
+
+            case 'rct':
+                return (
+                    <line
+                        key={ind.id}
+                        x1={rootApexX}
+                        y1={rootApexY}
+                        x2={rootApexX}
+                        y2={rootApexY + rootDirection * 28}
+                        stroke={ind.color}
+                        strokeWidth={2}
+                    />
+                );
+
+            case 'implant':
+                return (
+                    <rect
+                        key={ind.id}
+                        x={rootApexX - 5}
+                        y={rootApexY + rootDirection * 6}
+                        width={10}
+                        height={10}
+                        stroke={ind.color}
+                        fill="none"
+                        strokeWidth={2}
+                    />
+                );
+
+            default:
+                return null;
+        }
+
+    };
 
 
     return (
@@ -107,7 +212,6 @@ export const ToothContainer: React.FC<Props> = ({
                         preserveAspectRatio="xMidYMid meet"
                     />
 
-
                     {/* wheel overlaid, positioned based on arch */}
                     <foreignObject x={wheelX} y={wheelY} width={wheelSize} height={wheelSize}>
                         <ToothSurfaceWheel
@@ -117,22 +221,11 @@ export const ToothContainer: React.FC<Props> = ({
                         />
                     </foreignObject>
 
-
-
                     {/* tooth-level indicator overlays – simple example: small tags inside tooth */}
                     {tooth.toothIndicators.map(id => {
                         const ind = indicatorById[id];
                         return (
-                            <text
-                                key={id}
-                                x={55}
-                                y={20 + 10 * tooth.toothIndicators.indexOf(id)}
-                                fontSize="8"
-                                textAnchor="middle"
-                                fill={ind.color}
-                            >
-                                *
-                            </text>
+                            renderToothIndicator(ind)
                         );
                     })}
                     <text x={45} y={139}>{tooth.toothId}</text>

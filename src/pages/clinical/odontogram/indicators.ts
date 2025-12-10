@@ -15,7 +15,7 @@ export interface Indicator {
 export const INDICATORS: Indicator[] = [
     // Surface based
     { id: 'caries', name: 'Dental Caries', level: 'surface', style: 'fill', color: '#FF0000', icon: 'fa-solid fa-circle-dot text-red-600' },
-    { id: 'amalgam', name: 'Amalgam Restoration', level: 'surface', style: 'fill', color: '#0047AB', icon: 'fa-solid fa-fill-drip text-blue-700' },
+    { id: 'amalgam', name: 'Amalgam Restoration', level: 'surface', style: 'fill', color: '#727272ff', icon: 'fa-solid fa-fill-drip text-blue-700' },
     { id: 'composite', name: 'Composite Restoration', level: 'surface', style: 'outline', color: '#2196F3', icon: 'fa-regular fa-square text-blue-500' },
     { id: 'temporary', name: 'Temporary Filling', level: 'surface', style: 'fill', color: '#FFD700', icon: 'fa-solid fa-clock text-yellow-500' },
     { id: 'sealant', name: 'Sealant', level: 'surface', style: 'outline', color: '#00C853', icon: 'fa-solid fa-shield-halved text-green-600' },
