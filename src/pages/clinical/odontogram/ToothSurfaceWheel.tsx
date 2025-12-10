@@ -1,8 +1,7 @@
 // src/odontogram/ToothSurfaceWheel.tsx
 import React from 'react';
 import { SurfaceName, SurfaceState } from './types';
-import { getSurfaceColor, getStrokeColor } from './indicatorUtils';
-import { mapToFDI } from './fdi';
+import { getSurfaceColor, getStrokeColor } from './indicators';
 
 type Props = {
     size?: number;

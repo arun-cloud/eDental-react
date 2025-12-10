@@ -10,17 +10,26 @@ const surfaceNames: SurfaceName[] = ['buccal', 'mesial', 'distal', 'lingual', 'o
 const createEmptyTooth = (id: number): ToothState => ({
     toothId: id,
     surfaces: surfaceNames.reduce((acc, s) => {
-        acc[s] = { indicatorId: null };
+        acc[s] = { condition: 'healthy', indicatorId: null };
         return acc;
     }, {} as ToothState['surfaces']),
     toothIndicators: [],
     treatmentPlan: null,
 });
 
-// for now, 32 teeth simple
-const initialTeeth: ToothState[] = Array.from({ length: 32 }, (_, i) =>
-    createEmptyTooth(i + 1)
-);
+// FDI (ISO 3950) numbering system for permanent teeth
+// Quadrant 1: 11-18 (Upper Right)
+// Quadrant 2: 21-28 (Upper Left)
+// Quadrant 3: 31-38 (Lower Left)
+// Quadrant 4: 41-48 (Lower Right)
+const fdiToothIds = [
+    ...Array.from({ length: 8 }, (_, i) => 11 + i), // 11-18
+    ...Array.from({ length: 8 }, (_, i) => 21 + i), // 21-28
+    ...Array.from({ length: 8 }, (_, i) => 31 + i), // 31-38
+    ...Array.from({ length: 8 }, (_, i) => 41 + i), // 41-48
+];
+
+const initialTeeth: ToothState[] = fdiToothIds.map(id => createEmptyTooth(id));
 
 // placeholder mapping; you will swap each id with correct PNG
 const toothImageForId = (id: number): string =>
@@ -38,7 +47,7 @@ export const OdontogramChart: React.FC = () => {
                         ...t,
                         surfaces: {
                             ...t.surfaces,
-                            [surface]: { indicatorId },
+                            [surface]: { ...t.surfaces[surface], indicatorId },
                         },
                     }
                     : t
@@ -65,11 +74,11 @@ export const OdontogramChart: React.FC = () => {
         return teeth.map(t => ({
             toothId: t.toothId,
             surfaces: {
-                buccal: t.surfaces.buccal.indicatorId,
-                mesial: t.surfaces.mesial.indicatorId,
-                distal: t.surfaces.distal.indicatorId,
-                lingual: t.surfaces.lingual.indicatorId,
-                occlusal: t.surfaces.occlusal.indicatorId,
+                buccal: t.surfaces.buccal.indicatorId ?? null,
+                mesial: t.surfaces.mesial.indicatorId ?? null,
+                distal: t.surfaces.distal.indicatorId ?? null,
+                lingual: t.surfaces.lingual.indicatorId ?? null,
+                occlusal: t.surfaces.occlusal.indicatorId ?? null,
             },
             toothIndicators: t.toothIndicators,
             treatmentPlan: t.treatmentPlan ?? undefined,
@@ -82,8 +91,13 @@ export const OdontogramChart: React.FC = () => {
         // later: send to API
     };
 
-    const upper = teeth.slice(0, 16);
-    const lower = teeth.slice(16).slice().reverse(); // reverse visual order
+    // Separate teeth by quadrants for proper FDI display
+    // Upper: Q1 (11-18) + Q2 (21-28)
+    // Lower: Q3 (31-38) + Q4 (41-48)
+    const quadrant1 = teeth.filter(t => t.toothId >= 11 && t.toothId <= 18); // Upper Right
+    const quadrant2 = teeth.filter(t => t.toothId >= 21 && t.toothId <= 28); // Upper Left
+    const quadrant3 = teeth.filter(t => t.toothId >= 31 && t.toothId <= 38); // Lower Left
+    const quadrant4 = teeth.filter(t => t.toothId >= 41 && t.toothId <= 48); // Lower Right
 
     return (
         <div>
@@ -92,10 +106,23 @@ export const OdontogramChart: React.FC = () => {
                 onIndicatorSelect={setActiveIndicatorId}
             />
 
-
             <div style={{ padding: '8px 12px' }}>
+                {/* Upper Arch: Q1 (18→11 reversed) + Q2 (21→28 forward) */}
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16 }}>
-                    {upper.map(t => (
+                    {quadrant1
+                        .slice()
+                        .reverse()
+                        .map(t => (
+                            <ToothContainer
+                                key={t.toothId}
+                                tooth={t}
+                                toothImageSrc={toothImageForId(t.toothId)}
+                                activeIndicatorId={activeIndicatorId}
+                                onSurfaceUpdate={updateSurface}
+                                onToothIndicatorToggle={toggleToothIndicator}
+                            />
+                        ))}
+                    {quadrant2.map(t => (
                         <ToothContainer
                             key={t.toothId}
                             tooth={t}
@@ -107,8 +134,22 @@ export const OdontogramChart: React.FC = () => {
                     ))}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 12 }}>
-                    {lower.map(t => (
+                {/* Lower Arch: Q4 (48→41 reversed) + Q3 (31→38 forward) */}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 40 }}>
+                    {quadrant4
+                        .slice()
+                        .reverse()
+                        .map(t => (
+                            <ToothContainer
+                                key={t.toothId}
+                                tooth={t}
+                                toothImageSrc={toothImageForId(t.toothId)}
+                                activeIndicatorId={activeIndicatorId}
+                                onSurfaceUpdate={updateSurface}
+                                onToothIndicatorToggle={toggleToothIndicator}
+                            />
+                        ))}
+                    {quadrant3.map(t => (
                         <ToothContainer
                             key={t.toothId}
                             tooth={t}

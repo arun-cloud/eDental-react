@@ -33,15 +33,17 @@ export const IndicatorMenu = ({
 
 
     return (
-        <div className="indicator-menu" ref={menuRef}>
+        <div className="indicator-menu" ref={menuRef} style={{ marginBottom: '20px' }}>
             {INDICATOR_GROUPS.map(group => (
                 <div key={group.id} className="menu-item">
-                    <button
-                        className={`menu-btn ${openMenu === group.id ? "active" : ""}`}
+                    <button type="button"
+                        className={`btn btn-primary ${openMenu === group.id ? "active" : ""}`}
                         onClick={() => toggleMenu(group.id)}
                         title={group.name}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
                     >
                         <i className={group.icon}></i>
+                        <span>{group.name}</span>
                     </button>
 
                     {openMenu === group.id && (
